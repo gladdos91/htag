@@ -19,13 +19,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <Link href="/admin" className="block py-2 hover:text-coral-200">Dashboard</Link>
           <Link href="/admin/posts" className="block py-2 hover:text-coral-200">News Posts</Link>
           <Link href="/admin/newsletter" className="block py-2 hover:text-coral-200">Newsletter</Link>
+          <Link href="/admin/members" className="block py-2 hover:text-coral-200">Members</Link>
           <Link href="/admin/moderation" className="block py-2 hover:text-coral-200">Moderation</Link>
         </nav>
         <div className="mt-10 pt-6 border-t border-cream-50/15 text-xs text-cream-50/60">
           Signed in as {session.user?.name}
+          <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-coral-200">{role}</div>
         </div>
       </aside>
-      <main className="flex-1 p-10">{children}</main>
+      <main className="flex-1 p-10 overflow-x-hidden">{children}</main>
     </div>
   );
 }
