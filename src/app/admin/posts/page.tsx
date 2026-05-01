@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminPostsPage() {
   const posts = await prisma.post.findMany({
     orderBy: { createdAt: 'desc' },
@@ -15,7 +17,7 @@ export default async function AdminPostsPage() {
       </div>
 
       {posts.length === 0 ? (
-        <p className="text-ink/60">No posts yet. Posts are stub-only — wire up the editor next.</p>
+        <p className="text-ink/60">No posts yet. Click "New post" to create one.</p>
       ) : (
         <div className="bg-white border border-sage-900/10 rounded-md overflow-hidden">
           <table className="w-full text-sm">
