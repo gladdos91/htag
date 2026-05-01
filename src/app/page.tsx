@@ -187,7 +187,7 @@ export default async function HomePage() {
         <div className="relative max-w-7xl mx-auto px-6 md:px-10 grid md:grid-cols-12 gap-12 items-center">
           <div className="md:col-span-6 order-2 md:order-1">
             <div className="relative">
-              <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=900&q=80" className="w-full aspect-[5/4] object-cover rounded-md shadow-xl" alt="Community" />
+              <img src="/community.jpg" className="w-full aspect-[5/4] object-cover rounded-md shadow-xl" alt="HTAG members at the NY State Attorney General's office" />
               <div className="absolute -top-5 -left-5 bg-gold-500 px-4 py-3 rounded-md shadow-lg">
                 <div className="font-display text-sage-900 text-sm font-semibold">Community-led ✦</div>
               </div>
