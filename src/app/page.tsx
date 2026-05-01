@@ -4,11 +4,10 @@ import { Footer } from '@/components/footer';
 import { NewsletterSignup } from '@/components/newsletter-signup';
 import { prisma } from '@/lib/db';
 
-// Render dynamically so we can pull latest posts from the DB
 export const revalidate = 60;
 
 export default async function HomePage() {
-  let latestPosts: Awaited<ReturnType<typeof prisma.post.findMany>> = [];
+  let latestPosts: any[] = [];
   try {
     latestPosts = await prisma.post.findMany({
       where: { published: true },
@@ -17,7 +16,7 @@ export default async function HomePage() {
       include: { author: { select: { name: true } } },
     }) as any;
   } catch {
-    // DB not available in dev — render with placeholders
+    // DB not available — render with placeholders
   }
 
   return (
@@ -28,8 +27,8 @@ export default async function HomePage() {
       <section className="relative min-h-screen flex items-end overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=2000&q=80"
-            alt="Manufactured home community"
+            src="/hero.jpg"
+            alt="A Hoffman manufactured home community"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 hero-overlay"></div>
