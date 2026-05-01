@@ -1,5 +1,4 @@
 // HTAG data model
-// Run `npx prisma migrate dev` after editing this file.
 
 generator client {
   provider = "prisma-client-js"
@@ -10,15 +9,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ─────────────────────────────────────────
-// USERS & AUTH
-// ─────────────────────────────────────────
-
 enum Role {
-  TENANT       // default member
-  ADVOCATE     // verified, can answer Q&A
-  MODERATOR    // can pin/lock/remove
-  ADMIN        // full access
+  TENANT
+  ADVOCATE
+  MODERATOR
+  ADMIN
 }
 
 model User {
@@ -28,9 +23,11 @@ model User {
   passwordHash    String?
   image           String?
   role            Role      @default(TENANT)
-  parkCommunity   String?   // which Hoffman park they live in
+  parkCommunity   String?
   bio             String?
   verified        Boolean   @default(false)
+  banned          Boolean   @default(false)
+  bannedReason    String?
   emailVerified   DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
@@ -43,7 +40,6 @@ model User {
   sessions        Session[]
 }
 
-// NextAuth tables
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -76,10 +72,6 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// ─────────────────────────────────────────
-// NEWS / BLOG POSTS (public homepage content)
-// ─────────────────────────────────────────
-
 model Post {
   id          String   @id @default(cuid())
   slug        String   @unique
@@ -96,16 +88,11 @@ model Post {
   author      User     @relation(fields: [authorId], references: [id])
 }
 
-// ─────────────────────────────────────────
-// FORUM
-// ─────────────────────────────────────────
-
 model Category {
   id          String   @id @default(cuid())
   slug        String   @unique
   name        String
   description String?
-  // Sort weight (lower = top of list)
   order       Int      @default(0)
   createdAt   DateTime @default(now())
 
@@ -142,15 +129,10 @@ model Reply {
   authorId   String
   author     User     @relation(fields: [authorId], references: [id])
 
-  // For nested replies
   parentId   String?
   parent     Reply?   @relation("ReplyThread", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   children   Reply[]  @relation("ReplyThread")
 }
-
-// ─────────────────────────────────────────
-// RESOURCES
-// ─────────────────────────────────────────
 
 enum ResourceType {
   GUIDE
@@ -167,17 +149,13 @@ model Resource {
   title       String
   description String?
   type        ResourceType
-  category    String?      // "Legal", "Health", "Organizing", etc.
-  url         String?      // external link
-  fileUrl     String?      // hosted file (PDF, etc.)
+  category    String?
+  url         String?
+  fileUrl     String?
   body        String?      @db.Text
   featured    Boolean      @default(false)
   createdAt   DateTime     @default(now())
 }
-
-// ─────────────────────────────────────────
-// NEWSLETTER
-// ─────────────────────────────────────────
 
 enum SubscriberStatus {
   PENDING
