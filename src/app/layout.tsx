@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Fraunces, Public_Sans } from 'next/font/google';
+import { SessionProviderWrapper } from '@/components/session-provider';
 import './globals.css';
 
 const fraunces = Fraunces({
@@ -36,7 +37,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${fraunces.variable} ${publicSans.variable}`}>
       <body className="min-h-screen font-body">
-        {children}
+        <SessionProviderWrapper>
+          {children}
+        </SessionProviderWrapper>
       </body>
     </html>
   );
