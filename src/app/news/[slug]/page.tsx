@@ -1,34 +1,24 @@
-import { notFound } from 'next/navigation';
-import { Nav } from '@/components/nav';
-import { Footer } from '@/components/footer';
-import { prisma } from '@/lib/db';
+import { createUploadthing, type FileRouter } from 'uploadthing/next';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
-export default async function PostPage({ params }: { params: { slug: string } }) {
-  const post = await prisma.post.findUnique({
-    where: { slug: params.slug },
-    include: { author: { select: { name: true, image: true } } },
-  });
+const f = createUploadthing();
 
-  if (!post || !post.published) notFound();
+export const ourFileRouter = {
+  // For news post cover images and inline images
+  postImage: f({ image: { maxFileSize: '8MB', maxFileCount: 1 } })
+    .middleware(async () => {
+      const session = await getServerSession(authOptions);
+      const role = (session?.user as any)?.role;
+      if (!session || (role !== 'ADMIN' && role !== 'MODERATOR')) {
+        throw new Error('Unauthorized');
+      }
+      return { userId: (session.user as any).id };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log('Upload complete by user', metadata.userId, '→', file.url);
+      return { url: file.url };
+    }),
+} satisfies FileRouter;
 
-  return (
-    <>
-      <Nav />
-      <article className="pt-32 pb-16 max-w-3xl mx-auto px-6 md:px-10">
-        <div className="text-coral-600 text-xs uppercase tracking-[0.3em] mb-6 rule-mark">
-          {post.author?.name ?? 'HTAG'} · {post.publishedAt?.toLocaleDateString()}
-        </div>
-        <h1 className="font-display font-light text-sage-900 text-4xl md:text-5xl display-tight mb-10">
-          {post.title}
-        </h1>
-        {post.coverImage && (
-          <img src={post.coverImage} alt="" className="w-full aspect-[16/9] object-cover rounded-md mb-12" />
-        )}
-        <div className="prose prose-lg max-w-none text-ink/85 leading-relaxed whitespace-pre-line">
-          {post.body}
-        </div>
-      </article>
-      <Footer />
-    </>
-  );
-}
+export type OurFileRouter = typeof ourFileRouter;
