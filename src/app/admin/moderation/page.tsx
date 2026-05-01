@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ModerationPage() {
   const recentThreads = await prisma.thread.findMany({
     orderBy: { createdAt: 'desc' },
@@ -34,7 +36,7 @@ export default async function ModerationPage() {
       </div>
 
       <div className="bg-cream-100 border border-sage-900/10 rounded-md p-6 text-sm text-ink/70">
-        <strong>To build out:</strong> reports system, user ban tools, content removal queue. Wire these to <code>/api/admin/moderation/*</code> endpoints.
+        <strong>To build out:</strong> reports system, user ban tools, content removal queue.
       </div>
     </div>
   );
