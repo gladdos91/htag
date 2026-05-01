@@ -6,6 +6,8 @@ import { prisma } from '@/lib/db';
 
 export const revalidate = 60;
 
+const DONATE_URL = 'https://www.zeffy.com/en-US/donation-form/donate-to-help-see-actual-change-in-our-communities';
+
 export default async function HomePage() {
   let latestPosts: any[] = [];
   try {
@@ -15,9 +17,7 @@ export default async function HomePage() {
       take: 3,
       include: { author: { select: { name: true } } },
     }) as any;
-  } catch {
-    // DB not available — render with placeholders
-  }
+  } catch {}
 
   return (
     <>
@@ -26,11 +26,7 @@ export default async function HomePage() {
       {/* HERO */}
       <section className="relative min-h-screen flex items-end overflow-hidden">
         <div className="absolute inset-0">
-          <img
-            src="/hero.jpg"
-            alt="A Hoffman manufactured home community"
-            className="w-full h-full object-cover"
-          />
+          <img src="/hero.jpg" alt="A Hoffman manufactured home community" className="w-full h-full object-cover" />
           <div className="absolute inset-0 hero-overlay"></div>
         </div>
         <div className="blob bg-coral-400 w-[400px] h-[400px] -top-20 -right-20"></div>
@@ -50,7 +46,7 @@ export default async function HomePage() {
               fighting to ensure every tenant has a safe, dignified place to call home.
             </p>
             <div className="reveal delay-3 flex flex-wrap gap-4">
-              <Link href="/donate" className="btn-coral px-7 py-3.5 text-sm font-medium tracking-wide">Support our work</Link>
+              <a href={DONATE_URL} target="_blank" rel="noopener" className="btn-coral px-7 py-3.5 text-sm font-medium tracking-wide">Support our work</a>
               <Link href="/about" className="btn-ghost text-cream-50 px-7 py-3.5 text-sm font-medium tracking-wide">Learn more</Link>
             </div>
           </div>
@@ -68,14 +64,8 @@ export default async function HomePage() {
               Every tenant deserves peace of mind, and a safe place to live <span className="italic text-coral-600">without fear of losing their home.</span>
             </h2>
             <div className="space-y-5 text-ink/80 text-base md:text-lg leading-relaxed max-w-2xl">
-              <p>
-                Hoffman Tenants Advocacy Group represents over sixteen communities owned by Hoffman Homes.
-                Our Executive Board members are tenants themselves — neighbors working to change things
-                not only in our parks, but in every manufactured home community in New York.
-              </p>
-              <p>
-                We are here to be the change, to educate, and to organize across the challenges our communities face every day.
-              </p>
+              <p>Hoffman Tenants Advocacy Group represents over sixteen communities owned by Hoffman Homes. Our Executive Board members are tenants themselves — neighbors working to change things not only in our parks, but in every manufactured home community in New York.</p>
+              <p>We are here to be the change, to educate, and to organize across the challenges our communities face every day.</p>
             </div>
             <Link href="/about" className="inline-block mt-10 text-sage-800 font-medium border-b-2 border-coral-500 hover:text-coral-600 pb-1 text-sm tracking-wide transition-colors">
               Read our story →
@@ -119,9 +109,7 @@ export default async function HomePage() {
                   <div className="inline-block bg-coral-100 text-coral-600 px-3 py-1 rounded-full text-[11px] uppercase tracking-[0.18em] mb-3 font-medium">
                     {post.author?.name ?? 'HTAG'}
                   </div>
-                  <h3 className="font-display font-medium text-sage-900 text-2xl leading-tight mb-3 group-hover:text-coral-600 transition-colors">
-                    {post.title}
-                  </h3>
+                  <h3 className="font-display font-medium text-sage-900 text-2xl leading-tight mb-3 group-hover:text-coral-600 transition-colors">{post.title}</h3>
                   {post.excerpt && <p className="text-ink/70 text-sm leading-relaxed">{post.excerpt}</p>}
                 </Link>
               ))
