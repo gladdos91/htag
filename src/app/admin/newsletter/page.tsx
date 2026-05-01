@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/db';
 import { ComposeForm } from './compose-form';
 
+export const dynamic = 'force-dynamic';
+
 export default async function NewsletterAdminPage() {
   const issues = await prisma.newsletterIssue.findMany({
     orderBy: { createdAt: 'desc' },
