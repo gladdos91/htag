@@ -4,7 +4,7 @@ import { Footer } from '@/components/footer';
 import { prisma } from '@/lib/db';
 
 export const metadata = { title: 'News · HTAG' };
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function NewsPage() {
   let posts: any[] = [];
@@ -31,8 +31,14 @@ export default async function NewsPage() {
           <div className="grid md:grid-cols-3 gap-8">
             {posts.map(post => (
               <Link href={`/news/${post.slug}`} key={post.id} className="group block">
-                <div className="overflow-hidden rounded-md mb-5 aspect-[4/3]">
-                  <img src={post.coverImage ?? 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800'} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
+                <div className="overflow-hidden rounded-md mb-5 aspect-[4/3] bg-cream-200">
+                  {post.coverImage ? (
+                    <img src={post.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-sage-100 to-coral-100">
+                      <span className="font-display text-3xl text-sage-900/30">HTAG</span>
+                    </div>
+                  )}
                 </div>
                 <div className="inline-block bg-coral-100 text-coral-600 px-3 py-1 rounded-full text-[11px] uppercase tracking-[0.18em] mb-3 font-medium">
                   {post.author?.name ?? 'HTAG'}
