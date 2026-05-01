@@ -116,10 +116,4 @@ export function PostsList({ posts: initialPosts }: { posts: Post[] }) {
                   </button>
                 </div>
               </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
+            </t
