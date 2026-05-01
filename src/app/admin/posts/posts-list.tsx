@@ -75,7 +75,7 @@ export function PostsList({ posts: initialPosts }: { posts: Post[] }) {
               <td className="px-4 py-3">
                 {p.published ? (
                   <span className="inline-block px-2.5 py-1 rounded-full bg-sage-100 text-sage-800 text-xs font-medium">
-                    ✓ Published
+                    Published
                   </span>
                 ) : (
                   <span className="inline-block px-2.5 py-1 rounded-full bg-gold-200 text-sage-900 text-xs font-medium">
@@ -116,4 +116,10 @@ export function PostsList({ posts: initialPosts }: { posts: Post[] }) {
                   </button>
                 </div>
               </td>
-            </t
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
