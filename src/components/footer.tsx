@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Footer() {
   return (
@@ -6,14 +7,14 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="grid md:grid-cols-12 gap-12 mb-16">
           <div className="md:col-span-5">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-11 h-11 rounded-full bg-coral-500 flex items-center justify-center">
-                <span className="font-display font-semibold text-cream-50 text-xl">H</span>
-              </div>
-              <div className="leading-tight">
-                <div className="font-display font-semibold text-cream-50">Hoffman Tenants</div>
-                <div className="text-[10px] uppercase tracking-[0.18em] text-cream-50/65">Advocacy Group</div>
-              </div>
+            <div className="bg-cream-100 inline-block p-4 rounded-md mb-6">
+              <Image
+                src="/logo.png"
+                alt="Hoffman Tenants Advocacy Group"
+                width={1200}
+                height={352}
+                className="h-12 w-auto"
+              />
             </div>
             <p className="text-sm leading-relaxed max-w-sm text-cream-50/75">
               Representing over sixteen manufactured home communities across New York State.
