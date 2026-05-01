@@ -52,26 +52,32 @@ export function Nav() {
                 </svg>
               </button>
               {accountOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-cream-50 border border-sage-900/10 rounded-md shadow-lg overflow-hidden">
-                  <div className="px-4 py-3 border-b border-sage-900/10">
-                    <div className="text-sm font-medium text-sage-900">{session.user?.name}</div>
-                    <div className="text-xs text-ink/60 truncate">{session.user?.email}</div>
-                  </div>
-                  {isAdmin && (
-                    <Link href="/admin" onClick={() => setAccountOpen(false)} className="block px-4 py-2.5 text-sm text-sage-900 hover:bg-cream-100 transition-colors">
-                      Admin dashboard
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setAccountOpen(false)} />
+                  <div className="absolute right-0 mt-2 w-56 bg-cream-50 border border-sage-900/10 rounded-md shadow-lg overflow-hidden z-20">
+                    <div className="px-4 py-3 border-b border-sage-900/10">
+                      <div className="text-sm font-medium text-sage-900">{session.user?.name}</div>
+                      <div className="text-xs text-ink/60 truncate">{session.user?.email}</div>
+                    </div>
+                    {isAdmin && (
+                      <Link href="/admin" onClick={() => setAccountOpen(false)} className="block px-4 py-2.5 text-sm text-sage-900 hover:bg-cream-100 transition-colors">
+                        Admin dashboard
+                      </Link>
+                    )}
+                    <Link href="/community" onClick={() => setAccountOpen(false)} className="block px-4 py-2.5 text-sm text-sage-900 hover:bg-cream-100 transition-colors">
+                      Community forum
                     </Link>
-                  )}
-                  <Link href="/community" onClick={() => setAccountOpen(false)} className="block px-4 py-2.5 text-sm text-sage-900 hover:bg-cream-100 transition-colors">
-                    Community forum
-                  </Link>
-                  <button
-                    onClick={() => signOut({ callbackUrl: '/' })}
-                    className="block w-full text-left px-4 py-2.5 text-sm text-coral-600 hover:bg-coral-100 transition-colors border-t border-sage-900/10"
-                  >
-                    Sign out
-                  </button>
-                </div>
+                    <Link href="/account" onClick={() => setAccountOpen(false)} className="block px-4 py-2.5 text-sm text-sage-900 hover:bg-cream-100 transition-colors">
+                      Account &amp; password
+                    </Link>
+                    <button
+                      onClick={() => signOut({ callbackUrl: '/' })}
+                      className="block w-full text-left px-4 py-2.5 text-sm text-coral-600 hover:bg-coral-100 transition-colors border-t border-sage-900/10"
+                    >
+                      Sign out
+                    </button>
+                  </div>
+                </>
               )}
             </div>
           ) : (
@@ -103,6 +109,7 @@ export function Nav() {
             {session ? (
               <>
                 {isAdmin && <Link href="/admin" className="block">Admin dashboard</Link>}
+                <Link href="/account" className="block">Account &amp; password</Link>
                 <button onClick={() => signOut({ callbackUrl: '/' })} className="block text-coral-600">Sign out</button>
               </>
             ) : (
