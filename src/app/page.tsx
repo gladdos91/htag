@@ -4,7 +4,7 @@ import { Footer } from '@/components/footer';
 import { NewsletterSignup } from '@/components/newsletter-signup';
 import { prisma } from '@/lib/db';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 const DONATE_URL = 'https://www.zeffy.com/en-US/donation-form/donate-to-help-see-actual-change-in-our-communities';
 
@@ -103,8 +103,14 @@ export default async function HomePage() {
             {latestPosts.length > 0 ? (
               latestPosts.map((post: any) => (
                 <Link href={`/news/${post.slug}`} key={post.id} className="group block">
-                  <div className="overflow-hidden rounded-md mb-5 aspect-[4/3]">
-                    <img src={post.coverImage ?? 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80'} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
+                  <div className="overflow-hidden rounded-md mb-5 aspect-[4/3] bg-cream-200">
+                    {post.coverImage ? (
+                      <img src={post.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-sage-100 to-coral-100">
+                        <span className="font-display text-3xl text-sage-900/30">HTAG</span>
+                      </div>
+                    )}
                   </div>
                   <div className="inline-block bg-coral-100 text-coral-600 px-3 py-1 rounded-full text-[11px] uppercase tracking-[0.18em] mb-3 font-medium">
                     {post.author?.name ?? 'HTAG'}
@@ -114,32 +120,10 @@ export default async function HomePage() {
                 </Link>
               ))
             ) : (
-              <>
-                <article className="group">
-                  <div className="overflow-hidden rounded-md mb-5 aspect-[4/3]">
-                    <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80" className="w-full h-full object-cover" alt="" />
-                  </div>
-                  <div className="inline-block bg-gold-200 text-sage-900 px-3 py-1 rounded-full text-[11px] uppercase tracking-[0.18em] mb-3 font-medium">May 2 · Convention</div>
-                  <h3 className="font-display font-medium text-sage-900 text-2xl leading-tight mb-3">NYS Manufactured Tenant Convention</h3>
-                  <p className="text-ink/70 text-sm leading-relaxed">The Attorney General's office is hosting a statewide convention. Anyone living in a manufactured park is welcome.</p>
-                </article>
-                <article className="group">
-                  <div className="overflow-hidden rounded-md mb-5 aspect-[4/3]">
-                    <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=800&q=80" className="w-full h-full object-cover" alt="" />
-                  </div>
-                  <div className="inline-block bg-coral-100 text-coral-600 px-3 py-1 rounded-full text-[11px] uppercase tracking-[0.18em] mb-3 font-medium">Story · Amber Hickey</div>
-                  <h3 className="font-display font-medium text-sage-900 text-2xl leading-tight mb-3">Journey of change — what matters</h3>
-                  <p className="text-ink/70 text-sm leading-relaxed">What started as one home's frustration became a movement across communities.</p>
-                </article>
-                <article className="group">
-                  <div className="overflow-hidden rounded-md mb-5 aspect-[4/3]">
-                    <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&q=80" className="w-full h-full object-cover" alt="" />
-                  </div>
-                  <div className="inline-block bg-sage-100 text-sage-800 px-3 py-1 rounded-full text-[11px] uppercase tracking-[0.18em] mb-3 font-medium">Feature · MH Action</div>
-                  <h3 className="font-display font-medium text-sage-900 text-2xl leading-tight mb-3">Our president's story</h3>
-                  <p className="text-ink/70 text-sm leading-relaxed">MH Action profiled HTAG president Amber Hickey on the long road of organizing.</p>
-                </article>
-              </>
+              <div className="md:col-span-3 text-center py-16 text-ink/60">
+                <p className="font-display text-2xl mb-2">No stories yet.</p>
+                <p className="text-sm">Check back soon — we're just getting started.</p>
+              </div>
             )}
           </div>
         </div>
