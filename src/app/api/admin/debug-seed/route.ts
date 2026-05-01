@@ -3,15 +3,19 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/db';
 
 // TEMPORARY DEBUG ENDPOINT — DELETE AFTER USE
-// GET  → reports current state of the admin user
-// POST → forcibly creates/updates admin@hoffmantag.org with password 'changeme123'
+// GET  → reports current state of users
+// POST → forcibly creates/resets admin@hoffmantag.org with password 'changeme123'
 
 export async function GET() {
   const users = await prisma.user.findMany({
     select: {
-      id: true, email: true, name: true, role: true,
-      verified: true, banned: true,
-      hasPassword: false,
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      verified: true,
+      banned: true,
+      passwordHash: true,
     },
   });
   const adminEmail = 'admin@hoffmantag.org';
@@ -20,10 +24,16 @@ export async function GET() {
 
   return NextResponse.json({
     totalUsers: users.length,
-    users: users.map(u => ({ email: u.email, role: u.role, banned: u.banned })),
+    users: users.map(u => ({
+      email: u.email,
+      role: u.role,
+      banned: u.banned,
+      hasPassword: !!u.passwordHash,
+    })),
     adminExists: !!admin,
     adminHasPassword: !!admin?.passwordHash,
     adminBanned: admin?.banned ?? null,
+    adminVerified: admin?.verified ?? null,
     categoryCount,
   });
 }
