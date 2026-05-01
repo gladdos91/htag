@@ -1,44 +1,37 @@
-'use client';
+import { notFound } from 'next/navigation';
+import { Nav } from '@/components/nav';
+import { Footer } from '@/components/footer';
+import { prisma } from '@/lib/db';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+export const revalidate = 60;
 
-export function NewPostForm() {
-  const [title, setTitle] = useState('');
-  const [excerpt, setExcerpt] = useState('');
-  const [body, setBody] = useState('');
-  const [coverImage, setCoverImage] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const router = useRouter();
+export default async function PostPage({ params }: { params: { slug: string } }) {
+  const post = await prisma.post.findUnique({
+    where: { slug: params.slug },
+    include: { author: { select: { name: true, image: true } } },
+  });
 
-  async function save(publish: boolean) {
-    setSubmitting(true);
-    try {
-      const res = await fetch('/api/posts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, excerpt, body, coverImage, publish }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed');
-      router.push('/admin/posts');
-    } catch (err: any) {
-      alert(err.message);
-    } finally {
-      setSubmitting(false);
-    }
-  }
+  if (!post || !post.published) notFound();
 
   return (
-    <div className="space-y-4 max-w-3xl">
-      <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" className="w-full px-4 py-3 bg-white border border-sage-900/15 rounded-md outline-none focus:ring-2 focus:ring-coral-500 text-lg font-display" />
-      <input value={coverImage} onChange={e => setCoverImage(e.target.value)} placeholder="Cover image URL (optional)" className="w-full px-4 py-3 bg-white border border-sage-900/15 rounded-md outline-none focus:ring-2 focus:ring-coral-500 text-sm" />
-      <textarea value={excerpt} onChange={e => setExcerpt(e.target.value)} placeholder="Short excerpt for the listing card" rows={2} className="w-full px-4 py-3 bg-white border border-sage-900/15 rounded-md outline-none focus:ring-2 focus:ring-coral-500" />
-      <textarea value={body} onChange={e => setBody(e.target.value)} placeholder="Full body. Plain text or basic markdown." rows={16} className="w-full px-4 py-3 bg-white border border-sage-900/15 rounded-md outline-none focus:ring-2 focus:ring-coral-500" />
-      <div className="flex gap-3">
-        <button onClick={() => save(false)} disabled={submitting || !title || !body} className="px-5 py-3 border border-sage-900 text-sage-900 rounded-full text-sm font-medium hover:bg-sage-900 hover:text-cream-50 transition-colors disabled:opacity-50">Save draft</button>
-        <button onClick={() => save(true)} disabled={submitting || !title || !body} className="btn-coral px-5 py-3 text-sm font-medium disabled:opacity-50">Publish</button>
-      </div>
-    </div>
+    <>
+      <Nav />
+      <article className="pt-32 pb-16 max-w-3xl mx-auto px-6 md:px-10">
+        <div className="text-coral-600 text-xs uppercase tracking-[0.3em] mb-6 rule-mark">
+          {post.author?.name ?? 'HTAG'} · {post.publishedAt?.toLocaleDateString()}
+        </div>
+        <h1 className="font-display font-light text-sage-900 text-4xl md:text-5xl display-tight mb-10">
+          {post.title}
+        </h1>
+        {post.coverImage && (
+          <img src={post.coverImage} alt="" className="w-full aspect-[16/9] object-cover rounded-md mb-12" />
+        )}
+        <div
+          className="prose prose-lg max-w-none text-ink/85 leading-relaxed prose-headings:font-display prose-headings:text-sage-900 prose-a:text-coral-600 prose-img:rounded-md"
+          dangerouslySetInnerHTML={{ __html: post.body }}
+        />
+      </article>
+      <Footer />
+    </>
   );
 }
