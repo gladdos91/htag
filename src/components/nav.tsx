@@ -1,24 +1,26 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 
 export function Nav() {
   const [open, setOpen] = useState(false);
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-cream-50/85 backdrop-blur-md border-b border-sage-900/10">
-      <div className="max-w-7xl mx-auto px-6 md:px-10 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-coral-500 flex items-center justify-center shadow-sm">
-            <span className="font-display font-semibold text-cream-50 text-xl">H</span>
-          </div>
-          <div className="hidden sm:block leading-tight">
-            <div className="font-display font-semibold text-sage-900 text-sm">Hoffman Tenants</div>
-            <div className="text-[10px] uppercase tracking-[0.18em] text-sage-700/80">Advocacy Group</div>
-          </div>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-cream-100/90 backdrop-blur-md border-b border-sage-900/10">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 py-3 flex items-center justify-between">
+        <Link href="/" className="flex items-center" aria-label="Hoffman Tenants Advocacy Group home">
+          <Image
+            src="/logo.png"
+            alt="Hoffman Tenants Advocacy Group"
+            width={1200}
+            height={352}
+            priority
+            className="h-12 md:h-14 w-auto"
+          />
         </Link>
 
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-sage-900">
+        <div className="hidden md:flex items-center gap-7 text-sm font-medium text-sage-900">
           <Link href="/about" className="nav-link">About</Link>
           <Link href="/news" className="nav-link">News</Link>
           <Link href="/resources" className="nav-link">Resources</Link>
