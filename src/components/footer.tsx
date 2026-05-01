@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
+const DONATE_URL = 'https://www.zeffy.com/en-US/donation-form/donate-to-help-see-actual-change-in-our-communities';
+const HEALTH_SURVEY_URL = 'https://hoffmantaghealthsurvey.org/';
+
 export function Footer() {
   return (
     <footer id="contact" className="bg-sage-900 text-cream-50/85 py-20">
@@ -39,11 +42,11 @@ export function Footer() {
             </ul>
           </div>
           <div className="md:col-span-2">
-            <div className="text-xs uppercase tracking-[0.22em] text-coral-200 mb-5">Follow</div>
+            <div className="text-xs uppercase tracking-[0.22em] text-coral-200 mb-5">Take action</div>
             <ul className="space-y-2 text-sm">
-              <li><a href="https://www.facebook.com/groups/1044965670467186" className="hover:text-coral-200 transition-colors">Facebook</a></li>
-              <li><a href="https://hoffmantaghealthsurvey.org/" className="hover:text-coral-200 transition-colors">Health Survey</a></li>
-              <li><Link href="/donate" className="hover:text-coral-200 transition-colors">Donate</Link></li>
+              <li><a href="https://www.facebook.com/groups/1044965670467186" target="_blank" rel="noopener" className="hover:text-coral-200 transition-colors">Facebook</a></li>
+              <li><a href={HEALTH_SURVEY_URL} target="_blank" rel="noopener" className="hover:text-coral-200 transition-colors">Health Survey</a></li>
+              <li><a href={DONATE_URL} target="_blank" rel="noopener" className="hover:text-coral-200 transition-colors">Donate</a></li>
             </ul>
           </div>
         </div>
