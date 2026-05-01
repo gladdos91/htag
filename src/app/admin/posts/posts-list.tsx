@@ -21,7 +21,7 @@ export function PostsList({ posts: initialPosts }: { posts: Post[] }) {
   async function togglePublish(id: string, currentlyPublished: boolean) {
     setBusyId(id);
     try {
-      const res = await fetch(`/api/posts/${id}`, {
+      const res = await fetch('/api/posts/' + id, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ published: !currentlyPublished }),
@@ -38,10 +38,10 @@ export function PostsList({ posts: initialPosts }: { posts: Post[] }) {
   }
 
   async function deletePost(id: string, title: string) {
-    if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
+    if (!confirm('Delete "' + title + '"? This cannot be undone.')) return;
     setBusyId(id);
     try {
-      const res = await fetch(`/api/posts/${id}`, { method: 'DELETE' });
+      const res = await fetch('/api/posts/' + id, { method: 'DELETE' });
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || 'Failed');
@@ -74,46 +74,19 @@ export function PostsList({ posts: initialPosts }: { posts: Post[] }) {
               <td className="px-4 py-3">{p.author.name}</td>
               <td className="px-4 py-3">
                 {p.published ? (
-                  <span className="inline-block px-2.5 py-1 rounded-full bg-sage-100 text-sage-800 text-xs font-medium">
-                    Published
-                  </span>
+                  <span className="inline-block px-2.5 py-1 rounded-full bg-sage-100 text-sage-800 text-xs font-medium">Published</span>
                 ) : (
-                  <span className="inline-block px-2.5 py-1 rounded-full bg-gold-200 text-sage-900 text-xs font-medium">
-                    Draft
-                  </span>
+                  <span className="inline-block px-2.5 py-1 rounded-full bg-gold-200 text-sage-900 text-xs font-medium">Draft</span>
                 )}
               </td>
-              <td className="px-4 py-3 text-ink/60 text-xs">
-                {new Date(p.createdAt).toLocaleDateString()}
-              </td>
+              <td className="px-4 py-3 text-ink/60 text-xs">{new Date(p.createdAt).toLocaleDateString()}</td>
               <td className="px-4 py-3 text-right">
                 <div className="flex gap-2 justify-end">
-                  
-                    href={`/news/${p.slug}`}
-                    target="_blank"
-                    rel="noopener"
-                    className="px-3 py-1.5 rounded-md text-xs font-medium bg-sage-100 hover:bg-sage-200 text-sage-900"
-                  >
-                    View
-                  </a>
-                  <button
-                    onClick={() => togglePublish(p.id, p.published)}
-                    disabled={busyId === p.id}
-                    className={`px-3 py-1.5 rounded-md text-xs font-medium disabled:opacity-50 ${
-                      p.published
-                        ? 'bg-cream-100 hover:bg-coral-100 text-sage-900'
-                        : 'bg-coral-500 hover:bg-coral-600 text-cream-50'
-                    }`}
-                  >
+                  <a href={'/news/' + p.slug} target="_blank" rel="noopener" className="px-3 py-1.5 rounded-md text-xs font-medium bg-sage-100 hover:bg-sage-200 text-sage-900">View</a>
+                  <button onClick={() => togglePublish(p.id, p.published)} disabled={busyId === p.id} className={'px-3 py-1.5 rounded-md text-xs font-medium disabled:opacity-50 ' + (p.published ? 'bg-cream-100 hover:bg-coral-100 text-sage-900' : 'bg-coral-500 hover:bg-coral-600 text-cream-50')}>
                     {busyId === p.id ? '...' : p.published ? 'Unpublish' : 'Publish'}
                   </button>
-                  <button
-                    onClick={() => deletePost(p.id, p.title)}
-                    disabled={busyId === p.id}
-                    className="px-3 py-1.5 rounded-md text-xs font-medium bg-cream-100 hover:bg-coral-100 text-coral-600 disabled:opacity-50"
-                  >
-                    Delete
-                  </button>
+                  <button onClick={() => deletePost(p.id, p.title)} disabled={busyId === p.id} className="px-3 py-1.5 rounded-md text-xs font-medium bg-cream-100 hover:bg-coral-100 text-coral-600 disabled:opacity-50">Delete</button>
                 </div>
               </td>
             </tr>
