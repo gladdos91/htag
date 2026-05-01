@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 
+const DONATE_URL = 'https://www.zeffy.com/en-US/donation-form/donate-to-help-see-actual-change-in-our-communities';
+
 export function Nav() {
   const [open, setOpen] = useState(false);
   return (
@@ -29,9 +31,9 @@ export function Nav() {
           <Link href="/contact" className="nav-link">Contact</Link>
         </div>
 
-        <Link href="/donate" className="hidden md:inline-block btn-coral px-5 py-2.5 text-sm font-medium tracking-wide">
+        <a href={DONATE_URL} target="_blank" rel="noopener" className="hidden md:inline-block btn-coral px-5 py-2.5 text-sm font-medium tracking-wide">
           Support our work
-        </Link>
+        </a>
 
         <button onClick={() => setOpen(!open)} className="md:hidden text-sage-900" aria-label="Menu">
           <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
@@ -48,7 +50,7 @@ export function Nav() {
           <Link href="/community" className="block">Community</Link>
           <Link href="/newsletter" className="block">Newsletter</Link>
           <Link href="/contact" className="block">Contact</Link>
-          <Link href="/donate" className="btn-coral inline-block px-5 py-2.5 text-sm mt-2">Support our work</Link>
+          <a href={DONATE_URL} target="_blank" rel="noopener" className="btn-coral inline-block px-5 py-2.5 text-sm mt-2">Support our work</a>
         </div>
       )}
     </nav>
