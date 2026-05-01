@@ -73,7 +73,7 @@ export default async function HomePage() {
           </div>
           <div className="md:col-span-5">
             <div className="relative">
-              <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=900&q=80" alt="" className="w-full aspect-[4/5] object-cover rounded-md shadow-xl" />
+              <img src="/mission.jpg" alt="Dusk over a Hoffman community" className="w-full aspect-[4/5] object-cover rounded-md shadow-xl" />
               <div className="absolute -bottom-6 -left-6 bg-coral-500 text-cream-50 px-6 py-4 max-w-[200px] rounded-md shadow-lg">
                 <div className="font-display text-3xl font-light leading-none">16+</div>
                 <div className="text-xs uppercase tracking-[0.18em] mt-2 opacity-95">Communities represented</div>
