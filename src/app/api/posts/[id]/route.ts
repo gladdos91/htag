@@ -19,22 +19,26 @@ async function requireAdmin() {
   return session;
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, ctx: { params: { id: string } }) {
   const session = await requireAdmin();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const id = ctx.params.id;
 
   try {
     const data = patchSchema.parse(await req.json());
     const updateData: any = { ...data };
+
     if (data.published === true) {
-      const existing = await prisma.post.findUnique({ where: { id: params.id }, select: { publishedAt: true } });
+      const existing = await prisma.post.findUnique({ where: { id }, select: { publishedAt: true } });
       if (existing && !existing.publishedAt) updateData.publishedAt = new Date();
     }
     if (data.published === false) {
       updateData.publishedAt = null;
     }
+
     const post = await prisma.post.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
     });
     return NextResponse.json({ post });
@@ -43,12 +47,12 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 }
 
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_req: Request, ctx: { params: { id: string } }) {
   const session = await requireAdmin();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   try {
-    await prisma.post.delete({ where: { id: params.id } });
+    await prisma.post.delete({ where: { id: ctx.params.id } });
     return NextResponse.json({ ok: true });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 400 });
