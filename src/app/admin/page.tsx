@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard() {
   const [users, posts, threads, subscribers, pending] = await Promise.all([
     prisma.user.count(),
