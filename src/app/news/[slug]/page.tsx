@@ -3,6 +3,8 @@ import { Nav } from '@/components/nav';
 import { Footer } from '@/components/footer';
 import { prisma } from '@/lib/db';
 
+export const revalidate = 60;
+
 export default async function PostPage({ params }: { params: { slug: string } }) {
   const post = await prisma.post.findUnique({
     where: { slug: params.slug },
@@ -24,9 +26,10 @@ export default async function PostPage({ params }: { params: { slug: string } })
         {post.coverImage && (
           <img src={post.coverImage} alt="" className="w-full aspect-[16/9] object-cover rounded-md mb-12" />
         )}
-        <div className="prose prose-lg max-w-none text-ink/85 leading-relaxed whitespace-pre-line">
-          {post.body}
-        </div>
+        <div
+          className="prose prose-lg max-w-none text-ink/85 leading-relaxed prose-headings:font-display prose-headings:text-sage-900 prose-a:text-coral-600 prose-img:rounded-md"
+          dangerouslySetInnerHTML={{ __html: post.body }}
+        />
       </article>
       <Footer />
     </>
