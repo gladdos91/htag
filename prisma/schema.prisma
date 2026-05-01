@@ -1,0 +1,220 @@
+// HTAG data model
+// Run `npx prisma migrate dev` after editing this file.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────
+// USERS & AUTH
+// ─────────────────────────────────────────
+
+enum Role {
+  TENANT       // default member
+  ADVOCATE     // verified, can answer Q&A
+  MODERATOR    // can pin/lock/remove
+  ADMIN        // full access
+}
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  name            String?
+  passwordHash    String?
+  image           String?
+  role            Role      @default(TENANT)
+  parkCommunity   String?   // which Hoffman park they live in
+  bio             String?
+  verified        Boolean   @default(false)
+  emailVerified   DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  threads         Thread[]
+  replies         Reply[]
+  posts           Post[]
+  newsletterIssues NewsletterIssue[]
+  accounts        Account[]
+  sessions        Session[]
+}
+
+// NextAuth tables
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  @@unique([identifier, token])
+}
+
+// ─────────────────────────────────────────
+// NEWS / BLOG POSTS (public homepage content)
+// ─────────────────────────────────────────
+
+model Post {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String?
+  body        String   @db.Text
+  coverImage  String?
+  published   Boolean  @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id])
+}
+
+// ─────────────────────────────────────────
+// FORUM
+// ─────────────────────────────────────────
+
+model Category {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String?
+  // Sort weight (lower = top of list)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  threads     Thread[]
+}
+
+model Thread {
+  id          String    @id @default(cuid())
+  title       String
+  body        String    @db.Text
+  pinned      Boolean   @default(false)
+  locked      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  categoryId  String
+  category    Category  @relation(fields: [categoryId], references: [id])
+
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+
+  replies     Reply[]
+}
+
+model Reply {
+  id         String   @id @default(cuid())
+  body       String   @db.Text
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  threadId   String
+  thread     Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  authorId   String
+  author     User     @relation(fields: [authorId], references: [id])
+
+  // For nested replies
+  parentId   String?
+  parent     Reply?   @relation("ReplyThread", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children   Reply[]  @relation("ReplyThread")
+}
+
+// ─────────────────────────────────────────
+// RESOURCES
+// ─────────────────────────────────────────
+
+enum ResourceType {
+  GUIDE
+  TEMPLATE
+  LEGAL
+  FORM
+  VIDEO
+  EXTERNAL
+}
+
+model Resource {
+  id          String       @id @default(cuid())
+  slug        String       @unique
+  title       String
+  description String?
+  type        ResourceType
+  category    String?      // "Legal", "Health", "Organizing", etc.
+  url         String?      // external link
+  fileUrl     String?      // hosted file (PDF, etc.)
+  body        String?      @db.Text
+  featured    Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+}
+
+// ─────────────────────────────────────────
+// NEWSLETTER
+// ─────────────────────────────────────────
+
+enum SubscriberStatus {
+  PENDING
+  ACTIVE
+  UNSUBSCRIBED
+}
+
+model Subscriber {
+  id                String           @id @default(cuid())
+  email             String           @unique
+  name              String?
+  status            SubscriberStatus @default(PENDING)
+  unsubscribeToken  String           @unique @default(cuid())
+  verifyToken       String?          @unique
+  subscribedAt      DateTime         @default(now())
+  verifiedAt        DateTime?
+  unsubscribedAt    DateTime?
+}
+
+enum IssueStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  SENT
+}
+
+model NewsletterIssue {
+  id          String      @id @default(cuid())
+  subject     String
+  body        String      @db.Text
+  status      IssueStatus @default(DRAFT)
+  scheduledAt DateTime?
+  sentAt      DateTime?
+  recipientCount Int      @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  authorId    String
+  author      User        @relation(fields: [authorId], references: [id])
+}

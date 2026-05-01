@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    background: #fdf4e6;
+    color: #2d2a26;
+    background-image: radial-gradient(circle at 1px 1px, rgba(45,42,38,0.035) 1px, transparent 0);
+    background-size: 4px 4px;
+  }
+}
+
+@layer components {
+  .font-display { font-family: var(--font-fraunces), serif; font-variation-settings: "SOFT" 80, "opsz" 144; }
+  .display-tight { letter-spacing: -0.02em; line-height: 1.05; }
+
+  .hero-overlay {
+    background: linear-gradient(180deg, rgba(224,122,95,0.15) 0%, rgba(44,74,62,0.45) 50%, rgba(44,74,62,0.78) 100%);
+  }
+
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -4px;
+    width: 0; height: 1.5px;
+    background: #e07a5f;
+    transition: width 0.3s ease;
+  }
+  .nav-link:hover::after { width: 100%; }
+
+  .btn-primary {
+    background: #4d7969;
+    color: #fefaf2;
+    transition: all 0.25s ease;
+    border-radius: 9999px;
+  }
+  .btn-primary:hover { background: #3d6354; transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(77,121,105,0.5); }
+
+  .btn-coral {
+    background: #e07a5f;
+    color: #fefaf2;
+    transition: all 0.25s ease;
+    border-radius: 9999px;
+  }
+  .btn-coral:hover { background: #c96349; transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(224,122,95,0.55); }
+
+  .btn-ghost {
+    border: 1.5px solid currentColor;
+    transition: all 0.25s ease;
+    border-radius: 9999px;
+  }
+  .btn-ghost:hover { background: #fefaf2; color: #2c4a3e; border-color: #fefaf2; }
+
+  .rule-mark::before {
+    content: '';
+    display: inline-block;
+    width: 32px; height: 1px;
+    background: currentColor;
+    vertical-align: middle;
+    margin-right: 12px;
+    opacity: 0.5;
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+@keyframes reveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: reveal 0.9s ease forwards;
+}
+.delay-1 { animation-delay: 0.15s; }
+.delay-2 { animation-delay: 0.3s; }
+.delay-3 { animation-delay: 0.45s; }
