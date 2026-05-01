@@ -3,7 +3,7 @@ import { Nav } from '@/components/nav';
 import { Footer } from '@/components/footer';
 import { prisma } from '@/lib/db';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
   const post = await prisma.post.findUnique({
